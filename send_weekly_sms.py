@@ -4,20 +4,21 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 
-# 账号密码从 GitHub Secrets 读取
+# 从 GitHub Secrets 读取账号密码
 EMAIL = os.environ["GV_EMAIL"]
 PASS = os.environ["GV_PASS"]
 
-# 联系人列表
+# 收件人号码列表（去掉括号和空格）
 contacts = ["+18586333888", "+15732603230", "+18018108818", "+17609919966"]
 message = "Hi！这是每周问候短信，祝你一周愉快！"
 
-# 配置无头浏览器
+# 配置无头 Chromium
 options = Options()
 options.add_argument("--headless")  # 无头模式
-options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
+options.binary_location = "/usr/bin/chromium-browser"  # 指定 Chromium 路径
+
 driver = webdriver.Chrome(options=options)
 
 try:
@@ -33,6 +34,7 @@ try:
     driver.find_element(By.ID, "passwordNext").click()
     time.sleep(5)  # 等待登录完成
 
+    # 循环发送短信
     for number in contacts:
         driver.get("https://voice.google.com/u/0/messages?itemId=new")
         time.sleep(3)
