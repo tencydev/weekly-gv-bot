@@ -1,7 +1,7 @@
 name: Weekly GV SMS
 
 on:
-  workflow_dispatch:        # 手动触发
+  workflow_dispatch:        # 支持手动触发
   schedule:
     - cron: '0 1 * * 1'     # 每周一 09:00 北京时间 = 01:00 UTC
 
@@ -18,10 +18,10 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Dependencies
+      - name: Install Selenium
         run: pip install selenium
 
-      - name: Setup Chrome
+      - name: Setup Chromium
         run: |
           sudo apt-get update
           sudo apt-get install -y chromium-browser chromium-chromedriver
