@@ -1,0 +1,28 @@
+name: Weekly GV SMS
+
+on:
+  schedule:
+    - cron: '0 1 * * 1'  # 每周一 09:00 北京时间 = 01:00 UTC
+  workflow_dispatch:      # 支持手动触发
+
+jobs:
+  send_sms_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install pygooglevoice requests
+
+      - name: Run SMS Script
+        env:
+          GV_EMAIL: ${{ secrets.GV_EMAIL }}
+          GV_PASS: ${{ secrets.GV_PASS }}
+        run: python send_weekly_sms.py
