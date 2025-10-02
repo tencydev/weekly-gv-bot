@@ -1,16 +1,16 @@
 name: Weekly GV SMS
 
 on:
+  workflow_dispatch:        # 手动触发
   schedule:
-    - cron: '0 1 * * 1'  # 每周一 09:00 北京时间 = 01:00 UTC
-  workflow_dispatch:      # 支持手动触发
+    - cron: '0 1 * * 1'     # 每周一 09:00 北京时间 = 01:00 UTC
 
 jobs:
   send_sms_job:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -19,9 +19,14 @@ jobs:
           python-version: '3.10'
 
       - name: Install Dependencies
-        run: pip install pygooglevoice requests
+        run: pip install selenium
 
-      - name: Run SMS Script
+      - name: Setup Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+
+      - name: Run Selenium Script
         env:
           GV_EMAIL: ${{ secrets.GV_EMAIL }}
           GV_PASS: ${{ secrets.GV_PASS }}
